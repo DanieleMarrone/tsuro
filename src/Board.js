@@ -9,7 +9,45 @@ export const Board = ({ G, ctx, moves }) => {
     return (
         <div style={{ position: 'relative', width: `${boardWidth}px`, height: `${boardHeight}px` }}>
             <img src={boardImage} style={{ width: '100%', height: '100%' }} />
-            {
+            {ctx.phase === 'positioning' ? (
+                G.startingPositions.map((_, i) => {
+                    if (G.startingPositions[i] !== null)
+                        return null;
+
+                    let top = 0;
+                    let left = 0;
+
+                    if (i < 12) {
+                        top = 12;
+                        left = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor(i / 2);
+                    } else if (i < 24) {
+                        top = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor((i - 12) / 2);
+                        left = 12;
+                    } else if (i < 36) {
+                        top = 765;
+                        left = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor((i - 24) / 2);
+                    } else {
+                        top = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor((i - 36) / 2);
+                        left = 765;
+                    }
+
+                    return (
+                        <div
+                            key={i}
+                            onClick={() => moves.placeMarker(i)}
+                            style={{
+                                position: 'absolute',
+                                top: `${top}px`,
+                                left: `${left}px`,
+                                width: 25,
+                                height: 25,
+                                cursor: 'pointer',
+                            }}
+                        >
+                        </div>
+                    );
+                })
+            ) : (
                 G.board.map((row, x) =>
                     row.map((tile, y) => (
                         (tile == null) ? (
@@ -22,6 +60,7 @@ export const Board = ({ G, ctx, moves }) => {
                                     left: 48 + x * tileSize,
                                     width: tileSize,
                                     height: tileSize,
+                                    cursor: 'pointer',
                                 }}
                             >
                             </div>
@@ -42,8 +81,7 @@ export const Board = ({ G, ctx, moves }) => {
                         )
                     ))
                 )
-            }
-
+            )}
         </div>
     );
-}; 
+};
