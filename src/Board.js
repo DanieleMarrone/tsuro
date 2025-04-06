@@ -70,6 +70,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                     key={`${x}-${y}`}
                                     style={{
                                         position: 'absolute',
+                                        color: 'white',                                        
                                         top: 48 + y * tileSize,
                                         left: 48 + x * tileSize,
                                         width: tileSize,
@@ -78,6 +79,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                         backgroundPosition: `${-(48 + Math.floor(tile / boardSize) * tileSize)}px ${-(48 + (tile % boardSize) * tileSize)}px`
                                     }}
                                 >
+                                    {tile}
                                 </div>
                             )
                         ))
@@ -90,8 +92,10 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                         (tile != null) ? (
                             <div
                                 key={`${i}`}
+                                onClick={() => moves.selectTile(i)}
                                 style={{
                                     position: 'absolute',
+                                    color: 'white',
                                     top: 48,
                                     left: 48 + i * tileSize,
                                     width: tileSize,
@@ -108,6 +112,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                     e.currentTarget.style.transform = 'scale(1)'; // Ripristina la dimensione originale
                                 }}                                
                             >
+                                {tile}
                             </div>
                         ) : null
                     ))
