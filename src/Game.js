@@ -3,7 +3,7 @@ import { INVALID_MOVE } from 'boardgame.io/core';
 
 export const Tsuro = {
     setup: ({ ctx }) => ({
-        board: Array(6).fill(null).map(() => Array(6).fill(null)),
+        board: Array(6).fill(null).map(() => Array(6).fill({ tile: null, rotation: 0 })),
         startingPositions: Array(2 * 6 * 4).fill(null),
         deck: Array.from({ length: 35 }, (_, i) => i).sort(() => Math.random() - 0.5),
         hands: Array(ctx.numPlayers).fill(null).map(() => Array()),
@@ -38,12 +38,12 @@ export const Tsuro = {
                 selectTile: ({ G, playerID }, i) => {
                     G.selectedTile = G.hands[playerID][i];
                 },
-                placeTile: ({ G, events, playerID }, x, y) => {
+                placeTile: ({ G, events, playerID }, x, y, rotation) => {
                     if (G.selectedTile == null) {
                         return INVALID_MOVE;
                     }
 
-                    G.board[x][y] = G.selectedTile;
+                    G.board[x][y] = { tile: G.selectedTile, rotation: rotation };
                     G.hands[playerID].splice(G.hands[playerID].indexOf(G.selectedTile), 1);
                     G.selectedTile = null;
                     G.hands[playerID].push(G.deck.pop());
