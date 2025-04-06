@@ -53,13 +53,13 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                             left = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor(i / 2);
                         } else if (i < 24) {
                             top = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor((i - 12) / 2);
-                            left = 12;
+                            left = 765;
                         } else if (i < 36) {
                             top = 765;
-                            left = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor((i - 24) / 2);
+                            left = 47 + ((i % 2) ? 26 : 65) + tileSize * Math.floor((35 - i) / 2);
                         } else {
-                            top = 47 + ((i % 2) ? 65 : 26) + tileSize * Math.floor((i - 36) / 2);
-                            left = 765;
+                            top = 47 + ((i % 2) ? 26 : 65) + tileSize * Math.floor((47 - i) / 2);
+                            left = 12;
                         }
 
                         return (
@@ -68,6 +68,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                 onClick={() => moves.placeMarker(i)}
                                 style={{
                                     position: 'absolute',
+                                    color: 'white',
                                     top: `${top}px`,
                                     left: `${left}px`,
                                     width: 25,
@@ -75,6 +76,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                     cursor: 'pointer',
                                 }}
                             >
+                                {i}
                             </div>
                         );
                     })
@@ -106,7 +108,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                         width: tileSize,
                                         height: tileSize,
                                         backgroundImage: `url(${tilesImage})`,
-                                        backgroundPosition: `${-(48 + Math.floor(cell.tile / boardSize) * tileSize)}px ${-(48 + (cell.tile % boardSize) * tileSize)}px`,
+                                        backgroundPosition: `${-(48 + (cell.tile % boardSize) * tileSize)}px ${-(48 + Math.floor(cell.tile / boardSize) * tileSize)}px`,
                                         transform: `rotate(${cell.rotation}deg)`,                                        
                                     }}
                                 >
@@ -133,7 +135,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                     height: tileSize,
                                     cursor: 'pointer',
                                     backgroundImage: `url(${tilesImage})`,
-                                    backgroundPosition: `${-(48 + Math.floor(tile / boardSize) * tileSize)}px ${-(48 + (tile % boardSize) * tileSize)}px`,
+                                    backgroundPosition: `${-(48 + (tile % boardSize) * tileSize)}px ${-(48 + Math.floor(tile / boardSize) * tileSize)}px`,
                                     //transition: 'transform 0.2s ease-in-out',
                                 }}
                             // onMouseOver={(e) => {
@@ -159,7 +161,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                             width: tileSize,
                             height: tileSize,
                             backgroundImage: `url(${tilesImage})`,
-                            backgroundPosition: `${-(48 + Math.floor(selectedTile / boardSize) * tileSize)}px ${-(48 + (selectedTile % boardSize) * tileSize)}px`,
+                            backgroundPosition: `${-(48 + (selectedTile % boardSize) * tileSize)}px ${-(48 + Math.floor(selectedTile / boardSize) * tileSize)}px`,
                             transform: `rotate(${rotation}deg)`,
                             pointerEvents: 'none',
                         }}
