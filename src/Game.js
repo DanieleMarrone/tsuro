@@ -7,7 +7,7 @@ export const Tsuro = {
         startingPositions: Array(2 * 6 * 4).fill(null),
         deck: Array.from({ length: 35 }, (_, i) => i).sort(() => Math.random() - 0.5),
         hands: Array(ctx.numPlayers).fill(null).map(() => Array()),
-        selectedTile: null,
+        selectedTile: { tile: null, rotation: 0 },
     }),
 
     phases: {
@@ -36,16 +36,23 @@ export const Tsuro = {
             },
             moves: {
                 selectTile: ({ G, playerID }, i) => {
-                    G.selectedTile = G.hands[playerID][i];
+                    G.selectedTile = { tile: G.hands[playerID][i], rotation: 0 }
                 },
-                placeTile: ({ G, events, playerID }, x, y, rotation) => {
-                    if (G.selectedTile == null) {
+                rotateTile: ({ G }) => {
+                    if (G.selectedTile.tile == null) {
                         return INVALID_MOVE;
                     }
 
-                    G.board[x][y] = { tile: G.selectedTile, rotation: rotation };
-                    G.hands[playerID].splice(G.hands[playerID].indexOf(G.selectedTile), 1);
-                    G.selectedTile = null;
+                    G.selectedTile.rotation = (G.selectedTile.rotation + 1) % 4;
+                },
+                placeTile: ({ G, events, playerID }, x, y) => {
+                    if (G.selectedTile.tile == null) {
+                        return INVALID_MOVE;
+                    }
+
+                    G.board[x][y] = G.selectedTile;
+                    G.hands[playerID].splice(G.hands[playerID].indexOf(G.selectedTile.tile), 1);
+                    G.selectedTile = { tile: null, rotation: 0 }                 
                     G.hands[playerID].push(G.deck.pop());
                     events.endTurn();
                 },

@@ -9,7 +9,6 @@ export const Board = ({ G, ctx, moves, playerID }) => {
     const tileSize = 118;
 
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [rotation, setRotation] = useState(0);
 
     const handleMouseMove = (e) => {
         setMousePosition({ x: e.pageX, y: e.pageY });
@@ -20,17 +19,16 @@ export const Board = ({ G, ctx, moves, playerID }) => {
     };
 
     const handleTileSelect = (i) => {
-        setRotation(0);        
         moves.selectTile(i);
     };
 
     const handleRightClick = (e) => {
         e.preventDefault();
-        setRotation((prevRotation) => (prevRotation + 1) % 4);
+        moves.rotateTile();;
     };
 
-    const handlePlaceTile = (x, y, rotation) => {
-        moves.placeTile(x, y, rotation);
+    const handlePlaceTile = (x, y) => {
+        moves.placeTile(x, y);
     }
 
     useEffect(() => {
@@ -92,7 +90,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                             (cell.tile == null) ? (
                                 <div
                                     key={`${x}-${y}`}
-                                    onClick={() => handlePlaceTile(x, y, rotation)}
+                                    onClick={() => handlePlaceTile(x, y)}
                                     style={{
                                         position: 'absolute',
                                         top: 48 + y * tileSize,
@@ -151,7 +149,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                 }
             </div>
             {
-                (G.selectedTile != null) && (
+                (G.selectedTile.tile != null) && (
                     <div
                         style={{
                             position: 'absolute',
@@ -161,12 +159,12 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                             width: tileSize,
                             height: tileSize,
                             backgroundImage: `url(${tilesImage})`,
-                            backgroundPosition: `${-(48 + (G.selectedTile % boardSize) * tileSize)}px ${-(48 + Math.floor(G.selectedTile / boardSize) * tileSize)}px`,
-                            transform: `rotate(${rotation * 90}deg)`,
+                            backgroundPosition: `${-(48 + (G.selectedTile.tile % boardSize) * tileSize)}px ${-(48 + Math.floor(G.selectedTile.tile / boardSize) * tileSize)}px`,
+                            transform: `rotate(${G.selectedTile.rotation * 90}deg)`,
                             pointerEvents: 'none',
                         }}
                     >
-                        {G.selectedTile}
+                        {G.selectedTile.tile}
                     </div>
                 )
             }
