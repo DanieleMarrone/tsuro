@@ -93,13 +93,16 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                     onClick={() => handlePlaceTile(x, y)}
                                     style={{
                                         position: 'absolute',
+                                        color: 'white',
                                         top: 48 + y * tileSize,
                                         left: 48 + x * tileSize,
                                         width: tileSize,
                                         height: tileSize,
                                         cursor: 'pointer',
+                                        textAlign: 'center',
                                     }}
                                 >
+                                    ({x}, {y})
                                 </div>
                             ) : (
                                 <div
