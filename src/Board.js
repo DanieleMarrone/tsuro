@@ -9,16 +9,18 @@ export const Board = ({ G, ctx, moves, playerID }) => {
     const tileSize = 118;
 
     const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-    const [selectedTile, setSelectedTile] = useState(null);
     const [rotation, setRotation] = useState(0);
 
     const handleMouseMove = (e) => {
         setMousePosition({ x: e.pageX, y: e.pageY });
     };
 
-    const handleTileSelect = (tile, i) => {
-        setSelectedTile(tile);
-        setRotation(0);
+    const handlePLaceMarker = (i) => {
+        moves.placeMarker(i);
+    };
+
+    const handleTileSelect = (i) => {
+        setRotation(0);        
         moves.selectTile(i);
     };
 
@@ -26,6 +28,10 @@ export const Board = ({ G, ctx, moves, playerID }) => {
         e.preventDefault();
         setRotation((prevRotation) => (prevRotation + 1) % 4);
     };
+
+    const handlePlaceTile = (x, y, rotation) => {
+        moves.placeTile(x, y, rotation);
+    }
 
     useEffect(() => {
         document.addEventListener('mousemove', handleMouseMove);
@@ -65,7 +71,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                         return (
                             <div
                                 key={i}
-                                onClick={() => moves.placeMarker(i)}
+                                onClick={() => handlePLaceMarker(i)}
                                 style={{
                                     position: 'absolute',
                                     color: 'white',
@@ -86,10 +92,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                             (cell.tile == null) ? (
                                 <div
                                     key={`${x}-${y}`}
-                                    onClick={() => { 
-                                        moves.placeTile(x, y, rotation);
-                                        setSelectedTile(null);
-                                    }}
+                                    onClick={() => handlePlaceTile(x, y, rotation)}
                                     style={{
                                         position: 'absolute',
                                         top: 48 + y * tileSize,
@@ -128,7 +131,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                         (tile != null) && (
                             <div
                                 key={`${i}`}
-                                onClick={() => (ctx.currentPlayer == playerID) && handleTileSelect(tile, i)}
+                                onClick={() => handleTileSelect(i)}
                                 style={{
                                     position: 'absolute',
                                     color: 'white',
@@ -139,14 +142,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                     cursor: 'pointer',
                                     backgroundImage: `url(${tilesImage})`,
                                     backgroundPosition: `${-(48 + (tile % boardSize) * tileSize)}px ${-(48 + Math.floor(tile / boardSize) * tileSize)}px`,
-                                    //transition: 'transform 0.2s ease-in-out',
                                 }}
-                            // onMouseOver={(e) => {
-                            //     e.currentTarget.style.transform = 'scale(1.2)'; // Ingrandisce il div
-                            // }}
-                            // onMouseOut={(e) => {
-                            //     e.currentTarget.style.transform = 'scale(1)'; // Ripristina la dimensione originale
-                            // }}                                
                             >
                                 {tile}
                             </div>
@@ -155,20 +151,23 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                 }
             </div>
             {
-                (selectedTile != null) && (
+                (G.selectedTile != null) && (
                     <div
                         style={{
                             position: 'absolute',
+                            color: 'white',
                             top: mousePosition.y - tileSize / 2,
                             left: mousePosition.x - tileSize / 2,
                             width: tileSize,
                             height: tileSize,
                             backgroundImage: `url(${tilesImage})`,
-                            backgroundPosition: `${-(48 + (selectedTile % boardSize) * tileSize)}px ${-(48 + Math.floor(selectedTile / boardSize) * tileSize)}px`,
+                            backgroundPosition: `${-(48 + (G.selectedTile % boardSize) * tileSize)}px ${-(48 + Math.floor(G.selectedTile / boardSize) * tileSize)}px`,
                             transform: `rotate(${rotation * 90}deg)`,
                             pointerEvents: 'none',
                         }}
-                    ></div>
+                    >
+                        {G.selectedTile}
+                    </div>
                 )
             }
 
