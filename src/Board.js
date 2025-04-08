@@ -24,7 +24,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
 
     const handleRightClick = (e) => {
         e.preventDefault();
-        setRotation((prevRotation) => (prevRotation + 90) % 360);
+        setRotation((prevRotation) => (prevRotation + 1) % 4);
     };
 
     useEffect(() => {
@@ -86,7 +86,10 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                             (cell.tile == null) ? (
                                 <div
                                     key={`${x}-${y}`}
-                                    onClick={() => { moves.placeTile(x, y, rotation); setSelectedTile(null);}}
+                                    onClick={() => { 
+                                        moves.placeTile(x, y, rotation);
+                                        setSelectedTile(null);
+                                    }}
                                     style={{
                                         position: 'absolute',
                                         top: 48 + y * tileSize,
@@ -109,7 +112,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                                         height: tileSize,
                                         backgroundImage: `url(${tilesImage})`,
                                         backgroundPosition: `${-(48 + (cell.tile % boardSize) * tileSize)}px ${-(48 + Math.floor(cell.tile / boardSize) * tileSize)}px`,
-                                        transform: `rotate(${cell.rotation}deg)`,                                        
+                                        transform: `rotate(${cell.rotation * 90}deg)`,                                        
                                     }}
                                 >
                                     {cell.tile}
@@ -162,7 +165,7 @@ export const Board = ({ G, ctx, moves, playerID }) => {
                             height: tileSize,
                             backgroundImage: `url(${tilesImage})`,
                             backgroundPosition: `${-(48 + (selectedTile % boardSize) * tileSize)}px ${-(48 + Math.floor(selectedTile / boardSize) * tileSize)}px`,
-                            transform: `rotate(${rotation}deg)`,
+                            transform: `rotate(${rotation * 90}deg)`,
                             pointerEvents: 'none',
                         }}
                     ></div>
