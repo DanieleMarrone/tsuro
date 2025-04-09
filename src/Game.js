@@ -72,49 +72,54 @@ export const Tsuro = {
                     G.selectedTile = { tile: null, rotation: 0 }
                     G.hands[playerID].push(G.deck.pop());
 
-                    const out = tileConnections[G.board[x][y].tile][G.playerPositions[playerID].in];
-                    switch (out) {
-                        case 0:
-                            G.playerPositions[playerID].x = x;
-                            G.playerPositions[playerID].y = y - 1;
-                            G.playerPositions[playerID].in = 5;
-                            break;
-                        case 1:
-                            G.playerPositions[playerID].x = x;
-                            G.playerPositions[playerID].y = y;
-                            G.playerPositions[playerID].in = 4;
-                            break;
-                        case 2:
-                            G.playerPositions[playerID].x = x + 1;
-                            G.playerPositions[playerID].y = y;
-                            G.playerPositions[playerID].in = 7;
-                            break;
-                        case 3:
-                            G.playerPositions[playerID].x = x + 1;
-                            G.playerPositions[playerID].y = y;
-                            G.playerPositions[playerID].in = 6;
-                            break;
-                        case 4:
-                            G.playerPositions[playerID].x = x;
-                            G.playerPositions[playerID].y = y + 1;
-                            G.playerPositions[playerID].in = 1;
-                            break;
-                        case 5:
-                            G.playerPositions[playerID].x = x;
-                            G.playerPositions[playerID].y = y + 1;
-                            G.playerPositions[playerID].in = 0;
-                            break;
-                        case 6:
-                            G.playerPositions[playerID].x = x - 1;
-                            G.playerPositions[playerID].y = y;
-                            G.playerPositions[playerID].in = 3;
-                            break;
-                        case 7:
-                            G.playerPositions[playerID].x = x - 1;
-                            G.playerPositions[playerID].y = y;
-                            G.playerPositions[playerID].in = 2;
-                            break;
-                    }
+                    var px = G.playerPositions[playerID].x;
+                    var py = G.playerPositions[playerID].y;
+                    var pin = G.playerPositions[playerID].in;
+                    do {
+                        var tile = G.board[px][py].tile;
+                        var rotation = G.board[px][py].rotation;
+                        var pout = ((tileConnections[tile][(8 + pin - rotation * 2) % 8]) + rotation * 2) % 8;
+                        switch (pout) {
+                            case 0:
+                                py--;
+                                pin = 5;
+                                break;
+                            case 1:
+                                py--;
+                                pin = 4;
+                                break;
+                            case 2:
+                                px++;
+                                pin = 7;
+                                break;
+                            case 3:
+                                px++;
+                                pin = 6;
+                                break;
+                            case 4:
+                                py++;
+                                pin = 1;
+                                break;
+                            case 5:
+                                py++;
+                                pin = 0;
+                                break;
+                            case 6:
+                                px--;
+                                pin = 3;
+                                break;
+                            case 7:
+                                px--;
+                                pin = 2;
+                                break;
+                        }
+                    } while (px >= 0 && px < 6 &&
+                            py >= 0 && py < 6 &&
+                            G.board[px][py].tile != null);
+
+                    G.playerPositions[playerID].x = px;
+                    G.playerPositions[playerID].y = py;
+                    G.playerPositions[playerID].in = pin;
 
                     events.endTurn();
                 },
